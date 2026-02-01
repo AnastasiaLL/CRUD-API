@@ -20,7 +20,12 @@ const server = http.createServer((req: IncomingMessage, res: ServerResponse) => 
     return;
   }
 
-   handleRequest(req, res);
+   try {
+        handleRequest(req, res);
+    } catch (error) {
+        console.error('Unhandled server error:', error);
+        sendResponse(res, 500, { error: 'Internal server error' });
+    }
 
 })
 

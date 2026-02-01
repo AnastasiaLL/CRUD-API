@@ -66,10 +66,16 @@ export const handleUsersRoute = async (req: IncomingMessage, res: ServerResponse
                         res.writeHead(201, { 'Content-Type': 'application/json' });
                         res.end(JSON.stringify(newUser));
                     }
-                } catch(err){
-                    res.writeHead(400, { 'Content-Type': 'application/json' });
-                    res.end(JSON.stringify({ error: 'Invalid JSON format' }));
-                }
+                }catch (err) {
+        if (err instanceof SyntaxError) {
+            res.writeHead(400, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ error: 'Invalid JSON format' }));
+        } else {
+            console.error('POST error:', err);
+            res.writeHead(500, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ error: 'Internal server error' }));
+        }
+    }
             })
             return
         }
@@ -114,10 +120,16 @@ export const handleUsersRoute = async (req: IncomingMessage, res: ServerResponse
 
             res.writeHead(200, { 'Content-Type': 'application/json' });
             res.end(JSON.stringify(updatedUser));
-            } catch (error) {
+            } catch (err) {
+        if (err instanceof SyntaxError) {
             res.writeHead(400, { 'Content-Type': 'application/json' });
             res.end(JSON.stringify({ error: 'Invalid JSON format' }));
-            }
+        } else {
+            console.error('POST error:', err);
+            res.writeHead(500, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ error: 'Internal server error' }));
+        }
+    }
         });
 
 
@@ -140,13 +152,19 @@ export const handleUsersRoute = async (req: IncomingMessage, res: ServerResponse
             }
 
             res.writeHead(204);
-            res.end();
+            res.end(JSON.stringify({ message: 'User has been deleted' }));
             return;
         }
 
-    } catch (error) {
-    console.error('Server error:', error);
-    res.writeHead(500, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify({ error: 'Internal server error' }));
-  }
+    }  catch (error) {
+        console.error('Error in users route:', error);
+        
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+        
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ 
+            error: 'Internal server error',
+            message: process.env.NODE_ENV === 'development' ? errorMessage : undefined
+        }));
+    }
 }
