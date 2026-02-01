@@ -125,7 +125,7 @@ export const handleUsersRoute = async (req: IncomingMessage, res: ServerResponse
             res.writeHead(400, { 'Content-Type': 'application/json' });
             res.end(JSON.stringify({ error: 'Invalid JSON format' }));
         } else {
-            console.error('POST error:', err);
+            console.error('PUT error:', err);
             res.writeHead(500, { 'Content-Type': 'application/json' });
             res.end(JSON.stringify({ error: 'Internal server error' }));
         }
@@ -152,7 +152,6 @@ export const handleUsersRoute = async (req: IncomingMessage, res: ServerResponse
             }
 
             res.writeHead(204);
-            res.end(JSON.stringify({ message: 'User has been deleted' }));
             return;
         }
 
