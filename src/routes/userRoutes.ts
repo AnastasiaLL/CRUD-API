@@ -151,7 +151,8 @@ export const handleUsersRoute = async (req: IncomingMessage, res: ServerResponse
                 return;
             }
 
-            res.writeHead(204);
+           res.writeHead(204);
+            res.end(); 
             return;
         }
 

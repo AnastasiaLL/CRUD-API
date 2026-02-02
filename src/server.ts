@@ -29,7 +29,7 @@ const server = http.createServer((req: IncomingMessage, res: ServerResponse) => 
 
 })
 
-const handleRequest = (req: IncomingMessage, res: ServerResponse): void => {
+export const handleRequest = (req: IncomingMessage, res: ServerResponse): void => {
   const { url, method } = req;
 
   if (url && url.startsWith('/api/users')) {
